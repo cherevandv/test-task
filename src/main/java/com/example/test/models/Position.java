@@ -5,8 +5,7 @@ import javax.persistence.*;
 @Entity
 public class Position {
     @Id
-    @SequenceGenerator( name = "jpaSequence", sequenceName = "JPA_SEQUENCE", allocationSize = 1, initialValue = 1 )
-    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "jpaSequence")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
     private String position;
     private Integer employeeId;
