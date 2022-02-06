@@ -29,15 +29,11 @@ public class ListController {
 
     @PostMapping("filter")
     public String filter(@RequestParam String filter, Model model){
-        Iterable<Employee> filterEmployees;
-        Iterable<Position> filterPositions;
-        if(filter != null&& !filter.isEmpty()){
-            filterEmployees= employeeRepo.findById(Integer.valueOf(filter));
-            filterPositions= positionRepo.findByEmployeeId(Integer.valueOf(filter));
-        }else{
-            filterEmployees = employeeRepo.findAll();
-            filterPositions= positionRepo.findAll();
+        if(filter == null || filter.isEmpty()){
+            return "list";
         }
+        Iterable<Employee> filterEmployees=employeeRepo.findById(Integer.valueOf(filter));
+        Iterable<Position> filterPositions=positionRepo.findByEmployeeId(Integer.valueOf(filter));
         model.addAttribute("employees", filterEmployees);
         model.addAttribute("positions", filterPositions );
         return "list";
@@ -50,9 +46,11 @@ public class ListController {
 
     @PostMapping("/add")
     public String employeeAdd(@RequestParam String name, @RequestParam String surname,@RequestParam String position, Model model) {
+        if(name.trim().isEmpty()||surname.trim().isEmpty()||position.trim().isEmpty()){
+            return "redirect:/";
+        }
         Employee employee = new Employee(name, surname);
         employeeRepo.save(employee);
-//        Employee addedEmployee = (Employee) employeeRepo.findByNameAndSurname(name, surname);
         Integer employeeId = employee.getId();
         Position newPosition = new Position(position, employeeId);
         positionRepo.save(newPosition);
